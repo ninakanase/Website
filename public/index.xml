@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Portfolio</title>
+    <link>/</link>
+    <description>Recent content on Portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Fri, 01 May 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Project 2: Modeling, Testing, and Predicting (SDS348)</title>
+      <link>/project2/</link>
+      <pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/project2/</guid>
+      <description>Introduction The dataset I have chosen for Project 2 is called “Prof_Salary,” which was acquired from the R dataset list provided on the website: https://vincentarelbundock.github.io/Rdatasets/datasets.html. This dataset contains information about the nine-month academic salary for Professors in a U.S. college during the years 2008-2009 in order to monitor salary differences between male and female faculty members. This data frame contains 397 observations and 6 variables. The variable “rank” is a factor with 3 levels representing the type of Professors: Assistant Professor (AsstProf), Associate Professor (AssocProf), and Professor (Prof); the variable “discipline” is a factor with 2 levels representing the type of deparment: Theoretical Department (A) and Applied Department (B); the variable “yrs.</description>
+    </item>
+    
+    <item>
+      <title>Project 1: Exploratory Data Analysis (SDS348)</title>
+      <link>/project1/</link>
+      <pubDate>Sun, 15 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/project1/</guid>
+      <description>Introduction The two datasets I have chosen for Project 1 are called Texas_Diabetes and Texas_Cancer, which were both acquired from CDC.gov. The Texas_Diabetes dataset contains information about the percentage of diagnosed diabetes cases by counties in Texas in 2016. This data frame contains 255 observations and 4 variables. The variable “County” consists of all the counties in Texas, the variable “State” consists of the state of Texas, the variable “CountyFIPS” consists of FIPS state codes for each county in Texas, and the variable “Percentage” is a numeric vector that gives the age-adjusted percentage of diagnosed diabetes cases.</description>
+    </item>
+    
+    <item>
+      <title>Projects</title>
+      <link>/projects/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/</guid>
+      <description>Projects Here are some projects I have recently completed:
+  Exploratory Data Analysis with Tidyverse Tools
+  Modeling, Testing, and Classification
+  </description>
+    </item>
+    
+  </channel>
+</rss>

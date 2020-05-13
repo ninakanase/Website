@@ -1,0 +1,13 @@
+
+
+
+<p>+++ title = “R vs Python” description = “” tags = [] categories = [] +++</p>
+<p>The code below shows how R and Python can work together!</p>
+<pre class="r"><code>#Here is a code written in R:
+
+data &lt;- c(1:5)</code></pre>
+<pre class="python"><code>
+#Here is a code written in Python:
+
+print(r.data)</code></pre>
+<pre><code>## [1, 2, 3, 4, 5]</code></pre>

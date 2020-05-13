@@ -1,0 +1,272 @@
+---
+title: 'Project 1: Exploratory Data Analysis (SDS348)'
+author: "Nina Kanase, ndk347"
+date: '3/15/20'
+output:
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+  pdf_document:
+    toc: no
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", warning = F, message = F,
+tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
+
+```
+## Introduction
+
+*The two datasets I have chosen for Project 1 are called Texas_Diabetes and Texas_Cancer, which were both acquired from CDC.gov. The Texas_Diabetes dataset contains information about the percentage of diagnosed diabetes cases by counties in Texas in 2016. This data frame contains 255 observations and 4 variables. The variable "County" consists of all the counties in Texas, the variable "State" consists of the state of Texas, the variable "CountyFIPS" consists of FIPS state codes for each county in Texas, and the variable "Percentage" is a numeric vector that gives the age-adjusted percentage of diagnosed diabetes cases. The Texas_Cancer dataset contains information about the rate of new types of cancer in both males and females by counties in Texas from 2012 to 2016. This data frame contains 254 observations and 8 variables. The variable "Area" consists of the state of Texas, the variable "County" consists of all the counties in Texas, the variable "CancerType" consists of all types of cancer that were diagnosed, the variable "Year" consists of the years from 2012-2016 when the data was taken, the variable "Sex" consists of both males and females, the variable "AgeAdjustedRate" is a numeric vector that gives the age-adjusted rate of new types of cancer per 100,000 people, the variable "CaseCount" is a numeric vector that gives the number of cases of cancer in each county, and the variable "Population" is a numeric vector that gives the population in each county.*
+
+*I chose these datasets as I am interested in becoming a physician, and the rise in cancer and diabetes are very prevalent problems that I will face as I pursue my career in the healthcare field. My grandfather has both diabetes and cancer, therefore I was interested in exploring these datasets. While there may not be a direct association with cancer and diabetes since the causes for each disease can be different and vast, espeically with the causes of cancer, there could be a potential association where higher rates of cancer could be found in counties that also have higher rates of diabetes. I also expect there to be higher levels of both diseases in areas that are more populated overall.*
+
+---
+
+## Tidying
+```{r cars}
+library(tidyverse)
+Texas_Diabetes <- read.csv("Texas_Diabetes.csv")
+Texas_Cancer <- read.csv("Texas_Cancer.csv")
+Texas_Cancer<-Texas_Cancer%>%mutate_all(as.character)%>%
+  mutate_all(function(x)gsub("'","",x))%>%mutate_at(6:8,as.numeric)
+
+
+```
+
+
+```{r}
+
+Untidy_dat <- Texas_Cancer %>% 
+  mutate(pop_cat=ifelse(Population<median(Population),"low_pop","high_pop")) %>% 
+  pivot_wider(names_from = "pop_cat", values_from = "Population")
+glimpse(Untidy_dat)
+
+Tidy_dat<- Untidy_dat %>% 
+  pivot_longer(c("low_pop","high_pop"), names_to="pop_cat", values_to="Population") %>% 
+  na.omit
+glimpse(Tidy_dat)
+
+```
+
+*Both datasets were already tidy, therefore I had to untidy my data to show the use of pivot_wider. First, I created a new variable that separated the "Population" variable into a low and high population value based on a population that is below or above the median. Using "pivot_wider," I separated the values from "Population" into the "low" and "high" variables, where an NA is present in the column it does not apply to. Finally, I used "pivot_longer" to reshape wide to long in order to recreate a tidy dataset with the NA's omitted.*
+
+---
+
+## Joining
+```{r}
+
+Texas_Diabetes_ <- Texas_Diabetes[-c(255), ] 
+Texas_Diabetes2 <- Texas_Diabetes_ %>% 
+  select(-State, -CountyFIPS)
+    
+Texas_Cancer2 <- Texas_Cancer %>% 
+  select(-CancerType, -Year, -Sex, -Area)
+
+```
+
+*The variables "State" and "CountyFIPS" were removed from the Texas_Diabetes dataset because there was only 1 state for the "State" variable and the "CountyFIPS" was a variable that was not needed in joining the 2 datasets. The variables "CancerType," "Year," and "Sex" were all removed from the Texas_Cancer dataset since each variable only contained 1 unique value. The last row called "US Diabetes Surveillance System" was also removed from the Texas_Diabetes dataset as this row contained only NA's and provided no information.*
+
+---
+
+```{r}
+
+fulldat <- full_join(Texas_Diabetes2, Texas_Cancer2, by=("County"))
+glimpse(fulldat)
+
+```
+
+*I chose to perform a full join by County to join the Texas_Diabetes and Texas_Cancer datasets because I wanted to retain all rows and values in the combined dataset called "fulldat." The new dataset contains 254 observations and 5 variables: "County," "Percentage," "AgeAdjustedRate," "CaseCount," and "Population." No cases were dropped in the joining of the datasets.*
+
+---
+
+## Summary Statistics
+
+```{r}
+
+fulldat %>% summarize_all(n_distinct)
+
+```
+
+```{r}
+
+fulldat2 <- fulldat %>% 
+  filter(complete.cases(fulldat))%>% 
+  mutate(pop_cat=ifelse(Population<median(Population),"low","high"))
+glimpse(fulldat2)
+
+anti_join(fulldat, fulldat2, by="County")
+```
+
+*A new dataset called "fulldat2" was created to add a new variable called "pop_cat" that is a function of the "Population" variable. There were 5 counties that were dropped in the new dataset as the number of distinct counties went from 254 to 249. By using anti_join, counties that were lost were identified and had NA's for the "AgeAdjustedRate" and "CaseCount" variables. This new dataset was used for the remainder of the project.*
+
+---
+
+```{r}
+
+library(kableExtra)
+kable(fulldat2 %>% 
+  group_by(pop_cat) %>% 
+  summarize(mean_CaseCount=mean(CaseCount), mean_Percentage=mean(Percentage),
+            sd_CaseCount=sd(CaseCount), 
+            sd_Percentage=sd(Percentage))) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+
+```{r}
+
+fulldat2 %>% summarize_all(list(min))
+fulldat2 %>% summarize_all(list(max))
+
+```
+
+
+```{r}
+
+kable(fulldat2 %>% 
+        select(-"County", -"pop_cat") %>% 
+        var()) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+```{r}
+
+kable(fulldat2 %>% slice(1:10) %>% 
+        group_by(County, pop_cat) %>% 
+        summarize(mean_AgeAdjustedRate=mean(AgeAdjustedRate), 
+        mean_Percentage=mean(Percentage)) %>% 
+        arrange(desc(mean_AgeAdjustedRate), 
+                desc(mean_Percentage))) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+
+```{r}
+
+kable(fulldat2 %>% 
+        select_if(is.numeric) %>% 
+        cor()) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+*The first table shows the mean and standard deviation for the counts of cancer cases and the percentage of diagnosed diabetes cases in high and low populated Texas counties. Based on this data, there seems to be a much higher average of cancer compared to diabetes in both high and low populations. There is also a greater difference in the mean and standard deviation of cancer cases between high and low populations compared to those of diabetes. Next, the minimum and maximum values for all variables was found. Once again, the biggest difference in the values is between the minimum and maximum cases of cancer counts compared to the percentage of diabetes cases or the rate of new types of cancer in Texas counties.* 
+
+*The second table shows the calculated variances for each vector. The variances are extremely high between the variables, therefore the values are greatly dispersed around the mean and one another. The lowest variances occur with the “Percentage” variable. The next table shows the first 10 rows of the mean age-adjusted rate of new types of cancer and the mean age-adjusted percentage of diagnosed diabetes cases grouped by county and high and low populations. Angelina County was shown to have the highest mean rate of new types of cancer. However, this county did not correlate with the highest mean percent of diagnosed diabetes cases. The final table shows a correlation matrix of the numeric variables. The highest correlation occurs between the “Percentage” and “AgeAdjustedRate” variables. The smallest correlation occurs between the “CaseCount” and “Percentage” variables. Based on these statistics, graphs were made in order to visualize these trends.*
+
+---
+
+## Visualizing
+
+```{r}
+
+library(ggplot2) 
+library(reshape2) 
+ggplot(melt(cor(fulldat2 %>% 
+                  select(-County, -pop_cat))), aes(Var1, Var2)) +   
+     geom_tile(aes(fill = value))
+
+```
+
+
+
+```{r}
+
+ggplot(fulldat2, aes(pop_cat))+
+  geom_bar(aes(y=CaseCount,fill=County), stat="summary", fun.y="mean")+ 
+  theme(axis.text.x = element_text(angle=45, hjust=1), legend.position="none") + 
+  labs(x = "Population", y = "Cancer Case Count", 
+       title = "Cancer Case Count per High and Low Population Counties in Texas")
+
+```
+
+*This plot shows the number of cases of cancer in counties with high and low populations. As expected, counties with higher populations have more cases of cancer than counties with lower populations since more people are living there. However, the difference in cancer cases between the two population types was almost 5x10^5. As seen by the color gradient, it can be deduced that some Texas counties had more cancer cases than others in both population types. A legend was not added because the number of Texas Counties is over 200, which would have made the plot look compressed and unorganized if added.*
+
+---
+
+```{r}
+
+ggplot(data = fulldat2, aes(x = AgeAdjustedRate,
+                            y = Percentage, color = County)) + 
+  labs(x = "Age Adjusted Cancer Rate", 
+       y = "Age Adjusted Diabetes Cases", 
+       title = "Age Adjusted Cancer Rate vs Diabetes Cases per Texas County") + 
+  geom_point(shape=18, size=2.5) + 
+  theme(legend.position = "none") +
+  scale_x_continuous(breaks=seq(0, 600, 50)) + 
+  facet_wrap(~pop_cat)
+
+```
+*This plot shows the age-adjusted rate of new types of cancer and the age-adjusted rate of diagnosed diabetes cases in each Texas County. The groups are separated by a high or low population of the county. The low population counties show a greater spread around the x-axis than the high population counties. The low population counties also have more outliers and higher diagnosed cases of diabetes than the high population counties. There does not seem to be a linear trend between cancer rates and diabetes cases for either population type. A legend was not added because the number of Texas Counties is over 200, which would have made the plot look compressed and unorganized if added.*
+
+---
+
+## Dimensionality Reduction
+
+```{r}
+
+library(cluster)
+pam_dat<-fulldat2 %>% 
+  select(Percentage,CaseCount) %>% 
+  mutate_if(is.numeric,scale)
+sil_width<-vector()
+for(i in 2:10){
+pam_fit <- pam(pam_dat, k = i)
+sil_width[i] <- pam_fit$silinfo$avg.width
+}
+
+ggplot()+
+  geom_line(aes(x=1:10,y=sil_width))+
+  scale_x_continuous(name="k",breaks=1:10)
+
+
+```
+
+```{r}
+pam2 <- fulldat2 %>% 
+  mutate_if(is.numeric,scale) %>% 
+  select(-County, -pop_cat) %>% 
+  pam(3)
+pam2
+
+```
+```{r}
+pamclust<-fulldat2 %>% 
+  mutate(cluster=as.factor(pam2$clustering))
+pamclust %>% 
+  ggplot(aes(Percentage,CaseCount,color=cluster)) + geom_point()
+pamclust %>% 
+  group_by(cluster) %>% 
+  summarize_if(is.numeric,mean,na.rm=T)
+fulldat2[pam2$id.med,]
+```
+
+```{r}
+library(GGally)
+
+fulldat2 %>% 
+  mutate(cluster=as.factor(pam2$clustering)) %>% 
+  select(-County) %>%
+  ggpairs(columns = 1:4,aes(color=cluster))
+
+
+```
+
+
+```{r}
+
+plot(pam2,which=2)
+
+```
+
+*The first step in cluster analysis is to process the data, which was done by scaling the numeric variables. Based on the mean silhouette width, the first "elbow" occurs at 3. Therefore, the number of clusters was chosen to be 3. After performing a PAM/k-medoids analysis using all four numeric variables, the data showed that clusters 1, 2, and 3 consisted of 171, 190, and 82 vectors, respectively. The cluster assignments were saved to the dataset and used to color the points in a graph. Summary statistics of the means of each cluster were also found. Cluster 3 had the lowest values for all 4 variables. By examining the final medoids, Navarro, Red River, and Gaines County were found to be the most representative of clusters 1, 2, and 3, respectively.*
+
+*Through using ggpairs(), the saved cluster assignment was used to visualize the data colored by cluster. The plot of “CaseCount” vs “Population” mapped the variables the nicest. A linear line is present and the correlation is the highest, at 0.997. The plot of “Percentage” vs “AgeAdjustedRate” does not seem to show any general trend. Because the data is the most spread out, this plot does show the clusters most distinctly. The plot with the lowest correlation (-0.009) was between “CaseCount” and “Percentage.” Besides the spread out and linear plots, the other 4 point plots show a similar relationship between the variables. Based on the graphs that run through the center of the visualization, “CaseCount” and “Population” do not have visible data on their graphs. The average silhouette width is 0.29, which indicates a weak structure that could be artificial. These results indicate that most variables in the dataset are independent of each other. However, relationships previously seen in the summary statistics were still present. For example, counties with lower populations tend to have lower cases of cancer and diagnosed diabetes cases compared to counties with higher populations because more people are present. The cases of cancer in each county had a greater correlation with population than cases of diagnosed diabetes. Although data showed a higher correlation between diagnosed cases of diabetes and the rate of new types of cancer compared to the cases of cancer in each county, there does not seem to be a big correlation between diabetes and cancer cases in Texas counties as the cluster solution is weak.*
+
+---

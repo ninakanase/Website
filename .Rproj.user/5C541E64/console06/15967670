@@ -1,0 +1,14 @@
+]0;/stor/home/ndk347/Website]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ print)[K(r.data)
+bash: syntax error near unexpected token `r.data'
+]0;/stor/home/ndk347/Website]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ print(data)
+bash: syntax error near unexpected token `data'
+]0;/stor/home/ndk347/Website]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ [K]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ ls -a
+[0m[01;34m.[0m  [01;34m..[0m  config.toml  [01;34mcontent[0m  index.Rmd  [01;34mpublic[0m  .Rhistory  [01;34m.Rproj.user[0m  [01;34mstatic[0m  [01;34mthemes[0m  Website.Rproj
+]0;/stor/home/ndk347/Website]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ git innit[K[K[Kit
+Initialized empty Git repository in /stor/home/ndk347/Website/.git/
+]0;/stor/home/ndk347/Website]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ git ad.
+git: 'ad.' is not a git command. See 'git --help'.
+
+The most similar command is
+	add
+]0;/stor/home/ndk347/Website]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ git add .

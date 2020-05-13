@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Nina Kanase" />
+    <meta name="description" content="Describe your website">
+    <link rel="shortcut icon" type="image/x-icon" href="../img/favicon.ico">
+    <title>Project 1: Exploratory Data Analysis (SDS348)</title>
+    <meta name="generator" content="Hugo 0.70.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="../blog/">BLOG</a></li>
+        
+        <li><a href="../projects/">PROJECTS</a></li>
+        
+        <li><a href="../resume.pdf">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="../project1/">Project 1: Exploratory Data Analysis (SDS348)</a></strong>
+          </h3>
+        </div>
+        <div class="blog-title">
+          <h4>
+          March 15, 2020
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+<script src="../rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><em>The two datasets I have chosen for Project 1 are called Texas_Diabetes and Texas_Cancer, which were both acquired from CDC.gov. The Texas_Diabetes dataset contains information about the percentage of diagnosed diabetes cases by counties in Texas in 2016. This data frame contains 255 observations and 4 variables. The variable “County” consists of all the counties in Texas, the variable “State” consists of the state of Texas, the variable “CountyFIPS” consists of FIPS state codes for each county in Texas, and the variable “Percentage” is a numeric vector that gives the age-adjusted percentage of diagnosed diabetes cases. The Texas_Cancer dataset contains information about the rate of new types of cancer in both males and females by counties in Texas from 2012 to 2016. This data frame contains 254 observations and 8 variables. The variable “Area” consists of the state of Texas, the variable “County” consists of all the counties in Texas, the variable “CancerType” consists of all types of cancer that were diagnosed, the variable “Year” consists of the years from 2012-2016 when the data was taken, the variable “Sex” consists of both males and females, the variable “AgeAdjustedRate” is a numeric vector that gives the age-adjusted rate of new types of cancer per 100,000 people, the variable “CaseCount” is a numeric vector that gives the number of cases of cancer in each county, and the variable “Population” is a numeric vector that gives the population in each county.</em></p>
+<p><em>I chose these datasets as I am interested in becoming a physician, and the rise in cancer and diabetes are very prevalent problems that I will face as I pursue my career in the healthcare field. My grandfather has both diabetes and cancer, therefore I was interested in exploring these datasets. While there may not be a direct association with cancer and diabetes since the causes for each disease can be different and vast, espeically with the causes of cancer, there could be a potential association where higher rates of cancer could be found in counties that also have higher rates of diabetes. I also expect there to be higher levels of both diseases in areas that are more populated overall.</em></p>
+<hr />
+</div>
+<div id="tidying" class="section level2">
+<h2>Tidying</h2>
+<pre class="r"><code>library(tidyverse)
+Texas_Diabetes &lt;- read.csv(&quot;Texas_Diabetes.csv&quot;)
+Texas_Cancer &lt;- read.csv(&quot;Texas_Cancer.csv&quot;)
+Texas_Cancer &lt;- Texas_Cancer %&gt;% mutate_all(as.character) %&gt;% 
+    mutate_all(function(x) gsub(&quot;&#39;&quot;, &quot;&quot;, x)) %&gt;% mutate_at(6:8, 
+    as.numeric)</code></pre>
+<pre class="r"><code>Untidy_dat &lt;- Texas_Cancer %&gt;% mutate(pop_cat = ifelse(Population &lt; 
+    median(Population), &quot;low_pop&quot;, &quot;high_pop&quot;)) %&gt;% pivot_wider(names_from = &quot;pop_cat&quot;, 
+    values_from = &quot;Population&quot;)
+glimpse(Untidy_dat)</code></pre>
+<pre><code>## Observations: 254
+## Variables: 9
+## $ Area            &lt;chr&gt; &quot;Texas&quot;, &quot;Texas&quot;, &quot;Texas&quot;, &quot;Texas&quot;, &quot;Texas&quot;, &quot;Texas&quot;,…
+## $ County          &lt;chr&gt; &quot;Presidio County&quot;, &quot;Glasscock County&quot;, &quot;Culberson Cou…
+## $ CancerType      &lt;chr&gt; &quot;All Types of Cancer&quot;, &quot;All Types of Cancer&quot;, &quot;All Ty…
+## $ Year            &lt;chr&gt; &quot;2012-2016&quot;, &quot;2012-2016&quot;, &quot;2012-2016&quot;, &quot;2012-2016&quot;, &quot;…
+## $ Sex             &lt;chr&gt; &quot;Male and Female&quot;, &quot;Male and Female&quot;, &quot;Male and Femal…
+## $ AgeAdjustedRate &lt;dbl&gt; 207.6, 212.6, 218.1, 237.1, 251.9, 256.9, 292.1, 285.…
+## $ CaseCount       &lt;dbl&gt; 102, 16, 33, 56, 51, 72, 50, 104, 56, 99, 70, 20, 60,…
+## $ low_pop         &lt;dbl&gt; 36413, 6573, 11370, 11196, 17456, 18050, 11233, 37333…
+## $ high_pop        &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…</code></pre>
+<pre class="r"><code>Tidy_dat &lt;- Untidy_dat %&gt;% pivot_longer(c(&quot;low_pop&quot;, &quot;high_pop&quot;), 
+    names_to = &quot;pop_cat&quot;, values_to = &quot;Population&quot;) %&gt;% na.omit
+glimpse(Tidy_dat)</code></pre>
+<pre><code>## Observations: 249
+## Variables: 9
+## $ Area            &lt;chr&gt; &quot;Texas&quot;, &quot;Texas&quot;, &quot;Texas&quot;, &quot;Texas&quot;, &quot;Texas&quot;, &quot;Texas&quot;,…
+## $ County          &lt;chr&gt; &quot;Presidio County&quot;, &quot;Glasscock County&quot;, &quot;Culberson Cou…
+## $ CancerType      &lt;chr&gt; &quot;All Types of Cancer&quot;, &quot;All Types of Cancer&quot;, &quot;All Ty…
+## $ Year            &lt;chr&gt; &quot;2012-2016&quot;, &quot;2012-2016&quot;, &quot;2012-2016&quot;, &quot;2012-2016&quot;, &quot;…
+## $ Sex             &lt;chr&gt; &quot;Male and Female&quot;, &quot;Male and Female&quot;, &quot;Male and Femal…
+## $ AgeAdjustedRate &lt;dbl&gt; 207.6, 212.6, 218.1, 237.1, 251.9, 256.9, 292.1, 285.…
+## $ CaseCount       &lt;dbl&gt; 102, 16, 33, 56, 51, 72, 50, 104, 56, 99, 70, 20, 60,…
+## $ pop_cat         &lt;chr&gt; &quot;low_pop&quot;, &quot;low_pop&quot;, &quot;low_pop&quot;, &quot;low_pop&quot;, &quot;low_pop&quot;…
+## $ Population      &lt;dbl&gt; 36413, 6573, 11370, 11196, 17456, 18050, 11233, 37333…</code></pre>
+<p><em>Both datasets were already tidy, therefore I had to untidy my data to show the use of pivot_wider. First, I created a new variable that separated the “Population” variable into a low and high population value based on a population that is below or above the median. Using “pivot_wider,” I separated the values from “Population” into the “low” and “high” variables, where an NA is present in the column it does not apply to. Finally, I used “pivot_longer” to reshape wide to long in order to recreate a tidy dataset with the NA’s omitted.</em></p>
+<hr />
+</div>
+<div id="joining" class="section level2">
+<h2>Joining</h2>
+<pre class="r"><code>Texas_Diabetes_ &lt;- Texas_Diabetes[-c(255), ]
+Texas_Diabetes2 &lt;- Texas_Diabetes_ %&gt;% select(-State, -CountyFIPS)
+
+Texas_Cancer2 &lt;- Texas_Cancer %&gt;% select(-CancerType, -Year, 
+    -Sex, -Area)</code></pre>
+<p><em>The variables “State” and “CountyFIPS” were removed from the Texas_Diabetes dataset because there was only 1 state for the “State” variable and the “CountyFIPS” was a variable that was not needed in joining the 2 datasets. The variables “CancerType,” “Year,” and “Sex” were all removed from the Texas_Cancer dataset since each variable only contained 1 unique value. The last row called “US Diabetes Surveillance System” was also removed from the Texas_Diabetes dataset as this row contained only NA’s and provided no information.</em></p>
+<hr />
+<pre class="r"><code>fulldat &lt;- full_join(Texas_Diabetes2, Texas_Cancer2, by = (&quot;County&quot;))
+glimpse(fulldat)</code></pre>
+<pre><code>## Observations: 254
+## Variables: 5
+## $ County          &lt;chr&gt; &quot;Anderson County&quot;, &quot;Andrews County&quot;, &quot;Angelina County…
+## $ Percentage      &lt;dbl&gt; 9.9, 6.8, 12.7, 15.4, 9.2, 7.0, 16.0, 8.6, 5.4, 5.9, …
+## $ AgeAdjustedRate &lt;dbl&gt; 444.9, 392.6, 466.5, 438.5, 385.3, 404.6, 363.6, 391.…
+## $ CaseCount       &lt;dbl&gt; 1458, 296, 2336, 910, 244, 54, 950, 753, 148, 651, 18…
+## $ Population      &lt;dbl&gt; 289032, 86271, 438193, 122049, 43965, 9570, 238127, 1…</code></pre>
+<p><em>I chose to perform a full join by County to join the Texas_Diabetes and Texas_Cancer datasets because I wanted to retain all rows and values in the combined dataset called “fulldat.” The new dataset contains 254 observations and 5 variables: “County,” “Percentage,” “AgeAdjustedRate,” “CaseCount,” and “Population.” No cases were dropped in the joining of the datasets.</em></p>
+<hr />
+</div>
+<div id="summary-statistics" class="section level2">
+<h2>Summary Statistics</h2>
+<pre class="r"><code>fulldat %&gt;% summarize_all(n_distinct)</code></pre>
+<pre><code>##   County Percentage AgeAdjustedRate CaseCount Population
+## 1    254        126             234       237        254</code></pre>
+<pre class="r"><code>fulldat2 &lt;- fulldat %&gt;% filter(complete.cases(fulldat)) %&gt;% mutate(pop_cat = ifelse(Population &lt; 
+    median(Population), &quot;low&quot;, &quot;high&quot;))
+glimpse(fulldat2)</code></pre>
+<pre><code>## Observations: 249
+## Variables: 6
+## $ County          &lt;chr&gt; &quot;Anderson County&quot;, &quot;Andrews County&quot;, &quot;Angelina County…
+## $ Percentage      &lt;dbl&gt; 9.9, 6.8, 12.7, 15.4, 9.2, 7.0, 16.0, 8.6, 5.4, 5.9, …
+## $ AgeAdjustedRate &lt;dbl&gt; 444.9, 392.6, 466.5, 438.5, 385.3, 404.6, 363.6, 391.…
+## $ CaseCount       &lt;dbl&gt; 1458, 296, 2336, 910, 244, 54, 950, 753, 148, 651, 18…
+## $ Population      &lt;dbl&gt; 289032, 86271, 438193, 122049, 43965, 9570, 238127, 1…
+## $ pop_cat         &lt;chr&gt; &quot;high&quot;, &quot;low&quot;, &quot;high&quot;, &quot;high&quot;, &quot;low&quot;, &quot;low&quot;, &quot;high&quot;, …</code></pre>
+<pre class="r"><code>anti_join(fulldat, fulldat2, by = &quot;County&quot;)</code></pre>
+<pre><code>##           County Percentage AgeAdjustedRate CaseCount Population
+## 1  Borden County       13.6              NA        NA       3242
+## 2  Kenedy County        7.2              NA        NA       2171
+## 3    King County        9.2              NA        NA       1387
+## 4  Loving County        4.3              NA        NA        515
+## 5 Roberts County        4.9              NA        NA       4601</code></pre>
+<p><em>A new dataset called “fulldat2” was created to add a new variable called “pop_cat” that is a function of the “Population” variable. There were 5 counties that were dropped in the new dataset as the number of distinct counties went from 254 to 249. By using anti_join, counties that were lost were identified and had NA’s for the “AgeAdjustedRate” and “CaseCount” variables. This new dataset was used for the remainder of the project.</em></p>
+<hr />
+<pre class="r"><code>library(kableExtra)
+kable(fulldat2 %&gt;% group_by(pop_cat) %&gt;% summarize(mean_CaseCount = mean(CaseCount), 
+    mean_Percentage = mean(Percentage), sd_CaseCount = sd(CaseCount), 
+    sd_Percentage = sd(Percentage))) %&gt;% kable_styling(bootstrap_options = c(&quot;striped&quot;, 
+    &quot;hover&quot;))</code></pre>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+pop_cat
+</th>
+<th style="text-align:right;">
+mean_CaseCount
+</th>
+<th style="text-align:right;">
+mean_Percentage
+</th>
+<th style="text-align:right;">
+sd_CaseCount
+</th>
+<th style="text-align:right;">
+sd_Percentage
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+high
+</td>
+<td style="text-align:right;">
+4081.3840
+</td>
+<td style="text-align:right;">
+10.976000
+</td>
+<td style="text-align:right;">
+9404.4408
+</td>
+<td style="text-align:right;">
+3.825728
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+low
+</td>
+<td style="text-align:right;">
+203.0161
+</td>
+<td style="text-align:right;">
+9.191129
+</td>
+<td style="text-align:right;">
+145.9787
+</td>
+<td style="text-align:right;">
+4.618380
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>fulldat2 %&gt;% summarize_all(list(min))</code></pre>
+<pre><code>##            County Percentage AgeAdjustedRate CaseCount Population pop_cat
+## 1 Anderson County        2.3           207.6        16       3854    high</code></pre>
+<pre class="r"><code>fulldat2 %&gt;% summarize_all(list(max))</code></pre>
+<pre><code>##          County Percentage AgeAdjustedRate CaseCount Population pop_cat
+## 1 Zavala County       26.8           576.4     77228   22237304     low</code></pre>
+<pre class="r"><code>kable(fulldat2 %&gt;% select(-&quot;County&quot;, -&quot;pop_cat&quot;) %&gt;% var()) %&gt;% 
+    kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;))</code></pre>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Percentage
+</th>
+<th style="text-align:right;">
+AgeAdjustedRate
+</th>
+<th style="text-align:right;">
+CaseCount
+</th>
+<th style="text-align:right;">
+Population
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Percentage
+</td>
+<td style="text-align:right;">
+18.69645
+</td>
+<td style="text-align:right;">
+5.640774e+01
+</td>
+<td style="text-align:right;">
+-2.838985e+02
+</td>
+<td style="text-align:right;">
+-1.476166e+05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AgeAdjustedRate
+</td>
+<td style="text-align:right;">
+56.40774
+</td>
+<td style="text-align:right;">
+3.064217e+03
+</td>
+<td style="text-align:right;">
+2.694050e+04
+</td>
+<td style="text-align:right;">
+4.506992e+06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CaseCount
+</td>
+<td style="text-align:right;">
+-283.89854
+</td>
+<td style="text-align:right;">
+2.694050e+04
+</td>
+<td style="text-align:right;">
+4.800786e+07
+</td>
+<td style="text-align:right;">
+1.333957e+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Population
+</td>
+<td style="text-align:right;">
+-147616.61506
+</td>
+<td style="text-align:right;">
+4.506992e+06
+</td>
+<td style="text-align:right;">
+1.333957e+10
+</td>
+<td style="text-align:right;">
+3.730086e+12
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(fulldat2 %&gt;% slice(1:10) %&gt;% group_by(County, pop_cat) %&gt;% 
+    summarize(mean_AgeAdjustedRate = mean(AgeAdjustedRate), mean_Percentage = mean(Percentage)) %&gt;% 
+    arrange(desc(mean_AgeAdjustedRate), desc(mean_Percentage))) %&gt;% 
+    kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;))</code></pre>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+County
+</th>
+<th style="text-align:left;">
+pop_cat
+</th>
+<th style="text-align:right;">
+mean_AgeAdjustedRate
+</th>
+<th style="text-align:right;">
+mean_Percentage
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Angelina County
+</td>
+<td style="text-align:left;">
+high
+</td>
+<td style="text-align:right;">
+466.5
+</td>
+<td style="text-align:right;">
+12.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Anderson County
+</td>
+<td style="text-align:left;">
+high
+</td>
+<td style="text-align:right;">
+444.9
+</td>
+<td style="text-align:right;">
+9.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Aransas County
+</td>
+<td style="text-align:left;">
+high
+</td>
+<td style="text-align:right;">
+438.5
+</td>
+<td style="text-align:right;">
+15.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Armstrong County
+</td>
+<td style="text-align:left;">
+low
+</td>
+<td style="text-align:right;">
+404.6
+</td>
+<td style="text-align:right;">
+7.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bailey County
+</td>
+<td style="text-align:left;">
+low
+</td>
+<td style="text-align:right;">
+396.3
+</td>
+<td style="text-align:right;">
+5.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Andrews County
+</td>
+<td style="text-align:left;">
+low
+</td>
+<td style="text-align:right;">
+392.6
+</td>
+<td style="text-align:right;">
+6.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Austin County
+</td>
+<td style="text-align:left;">
+high
+</td>
+<td style="text-align:right;">
+391.2
+</td>
+<td style="text-align:right;">
+8.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Archer County
+</td>
+<td style="text-align:left;">
+low
+</td>
+<td style="text-align:right;">
+385.3
+</td>
+<td style="text-align:right;">
+9.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bandera County
+</td>
+<td style="text-align:left;">
+high
+</td>
+<td style="text-align:right;">
+372.1
+</td>
+<td style="text-align:right;">
+5.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Atascosa County
+</td>
+<td style="text-align:left;">
+high
+</td>
+<td style="text-align:right;">
+363.6
+</td>
+<td style="text-align:right;">
+16.0
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(fulldat2 %&gt;% select_if(is.numeric) %&gt;% cor()) %&gt;% kable_styling(bootstrap_options = c(&quot;striped&quot;, 
+    &quot;hover&quot;))</code></pre>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Percentage
+</th>
+<th style="text-align:right;">
+AgeAdjustedRate
+</th>
+<th style="text-align:right;">
+CaseCount
+</th>
+<th style="text-align:right;">
+Population
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Percentage
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+0.2356673
+</td>
+<td style="text-align:right;">
+-0.0094761
+</td>
+<td style="text-align:right;">
+-0.0176765
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AgeAdjustedRate
+</td>
+<td style="text-align:right;">
+0.2356673
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+0.0702408
+</td>
+<td style="text-align:right;">
+0.0421568
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CaseCount
+</td>
+<td style="text-align:right;">
+-0.0094761
+</td>
+<td style="text-align:right;">
+0.0702408
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+0.9968417
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Population
+</td>
+<td style="text-align:right;">
+-0.0176765
+</td>
+<td style="text-align:right;">
+0.0421568
+</td>
+<td style="text-align:right;">
+0.9968417
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>The first table shows the mean and standard deviation for the counts of cancer cases and the percentage of diagnosed diabetes cases in high and low populated Texas counties. Based on this data, there seems to be a much higher average of cancer compared to diabetes in both high and low populations. There is also a greater difference in the mean and standard deviation of cancer cases between high and low populations compared to those of diabetes. Next, the minimum and maximum values for all variables was found. Once again, the biggest difference in the values is between the minimum and maximum cases of cancer counts compared to the percentage of diabetes cases or the rate of new types of cancer in Texas counties.</em></p>
+<p><em>The second table shows the calculated variances for each vector. The variances are extremely high between the variables, therefore the values are greatly dispersed around the mean and one another. The lowest variances occur with the “Percentage” variable. The next table shows the first 10 rows of the mean age-adjusted rate of new types of cancer and the mean age-adjusted percentage of diagnosed diabetes cases grouped by county and high and low populations. Angelina County was shown to have the highest mean rate of new types of cancer. However, this county did not correlate with the highest mean percent of diagnosed diabetes cases. The final table shows a correlation matrix of the numeric variables. The highest correlation occurs between the “Percentage” and “AgeAdjustedRate” variables. The smallest correlation occurs between the “CaseCount” and “Percentage” variables. Based on these statistics, graphs were made in order to visualize these trends.</em></p>
+<hr />
+</div>
+<div id="visualizing" class="section level2">
+<h2>Visualizing</h2>
+<pre class="r"><code>library(ggplot2)
+library(reshape2)
+ggplot(melt(cor(fulldat2 %&gt;% select(-County, -pop_cat))), aes(Var1, 
+    Var2)) + geom_tile(aes(fill = value))</code></pre>
+<p><img src="../project1_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(fulldat2, aes(pop_cat)) + geom_bar(aes(y = CaseCount, 
+    fill = County), stat = &quot;summary&quot;, fun.y = &quot;mean&quot;) + theme(axis.text.x = element_text(angle = 45, 
+    hjust = 1), legend.position = &quot;none&quot;) + labs(x = &quot;Population&quot;, 
+    y = &quot;Cancer Case Count&quot;, title = &quot;Cancer Case Count per High and Low Population Counties in Texas&quot;)</code></pre>
+<p><img src="../project1_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><em>This plot shows the number of cases of cancer in counties with high and low populations. As expected, counties with higher populations have more cases of cancer than counties with lower populations since more people are living there. However, the difference in cancer cases between the two population types was almost 5x10^5. As seen by the color gradient, it can be deduced that some Texas counties had more cancer cases than others in both population types. A legend was not added because the number of Texas Counties is over 200, which would have made the plot look compressed and unorganized if added.</em></p>
+<hr />
+<pre class="r"><code>ggplot(data = fulldat2, aes(x = AgeAdjustedRate, y = Percentage, 
+    color = County)) + labs(x = &quot;Age Adjusted Cancer Rate&quot;, y = &quot;Age Adjusted Diabetes Cases&quot;, 
+    title = &quot;Age Adjusted Cancer Rate vs Diabetes Cases per Texas County&quot;) + 
+    geom_point(shape = 18, size = 2.5) + theme(legend.position = &quot;none&quot;) + 
+    scale_x_continuous(breaks = seq(0, 600, 50)) + facet_wrap(~pop_cat)</code></pre>
+<p><img src="../project1_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /> <em>This plot shows the age-adjusted rate of new types of cancer and the age-adjusted rate of diagnosed diabetes cases in each Texas County. The groups are separated by a high or low population of the county. The low population counties show a greater spread around the x-axis than the high population counties. The low population counties also have more outliers and higher diagnosed cases of diabetes than the high population counties. There does not seem to be a linear trend between cancer rates and diabetes cases for either population type. A legend was not added because the number of Texas Counties is over 200, which would have made the plot look compressed and unorganized if added.</em></p>
+<hr />
+</div>
+<div id="dimensionality-reduction" class="section level2">
+<h2>Dimensionality Reduction</h2>
+<pre class="r"><code>library(cluster)
+pam_dat &lt;- fulldat2 %&gt;% select(Percentage, CaseCount) %&gt;% mutate_if(is.numeric, 
+    scale)
+sil_width &lt;- vector()
+for (i in 2:10) {
+    pam_fit &lt;- pam(pam_dat, k = i)
+    sil_width[i] &lt;- pam_fit$silinfo$avg.width
+}
+
+ggplot() + geom_line(aes(x = 1:10, y = sil_width)) + scale_x_continuous(name = &quot;k&quot;, 
+    breaks = 1:10)</code></pre>
+<p><img src="../project1_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pam2 &lt;- fulldat2 %&gt;% mutate_if(is.numeric, scale) %&gt;% select(-County, 
+    -pop_cat) %&gt;% pam(3)
+pam2</code></pre>
+<pre><code>## Medoids:
+##       ID Percentage AgeAdjustedRate  CaseCount Population
+## [1,] 171 -0.3670608       0.5772922 -0.1270049 -0.1558376
+## [2,] 190  1.0899440       0.3442525 -0.2504034 -0.2481915
+## [3,]  82 -0.9914915      -0.9907580 -0.2730626 -0.2301589
+## Clustering vector:
+##   [1] 1 1 2 2 1 1 2 1 3 3 1 1 2 1 1 1 1 2 1 1 3 1 1 1 1 2 1 2 1 1 2 3 2 2 1 2 2
+##  [38] 2 2 1 2 1 3 1 3 2 3 1 1 2 3 3 1 3 1 1 2 1 1 1 2 3 3 1 3 1 1 3 1 1 2 2 1 2
+##  [75] 3 1 1 3 1 2 3 3 1 1 3 3 1 2 1 1 1 2 1 3 1 2 3 3 1 1
+##  [ reached getOption(&quot;max.print&quot;) -- omitted 149 entries ]
+## Objective function:
+##    build     swap 
+## 1.075564 1.031053 
+## 
+## Available components:
+##  [1] &quot;medoids&quot;    &quot;id.med&quot;     &quot;clustering&quot; &quot;objective&quot;  &quot;isolation&quot; 
+##  [6] &quot;clusinfo&quot;   &quot;silinfo&quot;    &quot;diss&quot;       &quot;call&quot;       &quot;data&quot;</code></pre>
+<pre class="r"><code>pamclust &lt;- fulldat2 %&gt;% mutate(cluster = as.factor(pam2$clustering))
+pamclust %&gt;% ggplot(aes(Percentage, CaseCount, color = cluster)) + 
+    geom_point()</code></pre>
+<p><img src="../project1_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pamclust %&gt;% group_by(cluster) %&gt;% summarize_if(is.numeric, mean, 
+    na.rm = T)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   cluster Percentage AgeAdjustedRate CaseCount Population
+##   &lt;fct&gt;        &lt;dbl&gt;           &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1 1             8.48            427.     4020.   1036226.
+## 2 2            15.2             417.     1067.    213706.
+## 3 3             6.82            336.      616.    181563.</code></pre>
+<pre class="r"><code>fulldat2[pam2$id.med, ]</code></pre>
+<pre><code>##               County Percentage AgeAdjustedRate CaseCount Population pop_cat
+## 171   Navarro County        8.5           430.6      1270     240630    high
+## 190 Red River County       14.8           417.7       415      62263     low
+## 82     Gaines County        5.8           343.8       258      97090    high</code></pre>
+<pre class="r"><code>library(GGally)
+
+fulldat2 %&gt;% mutate(cluster = as.factor(pam2$clustering)) %&gt;% 
+    select(-County) %&gt;% ggpairs(columns = 1:4, aes(color = cluster))</code></pre>
+<p><img src="../project1_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot(pam2, which = 2)</code></pre>
+<p><img src="../project1_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><em>The first step in cluster analysis is to process the data, which was done by scaling the numeric variables. Based on the mean silhouette width, the first “elbow” occurs at 3. Therefore, the number of clusters was chosen to be 3. After performing a PAM/k-medoids analysis using all four numeric variables, the data showed that clusters 1, 2, and 3 consisted of 171, 190, and 82 vectors, respectively. The cluster assignments were saved to the dataset and used to color the points in a graph. Summary statistics of the means of each cluster were also found. Cluster 3 had the lowest values for all 4 variables. By examining the final medoids, Navarro, Red River, and Gaines County were found to be the most representative of clusters 1, 2, and 3, respectively.</em></p>
+<p><em>Through using ggpairs(), the saved cluster assignment was used to visualize the data colored by cluster. The plot of “CaseCount” vs “Population” mapped the variables the nicest. A linear line is present and the correlation is the highest, at 0.997. The plot of “Percentage” vs “AgeAdjustedRate” does not seem to show any general trend. Because the data is the most spread out, this plot does show the clusters most distinctly. The plot with the lowest correlation (-0.009) was between “CaseCount” and “Percentage.” Besides the spread out and linear plots, the other 4 point plots show a similar relationship between the variables. Based on the graphs that run through the center of the visualization, “CaseCount” and “Population” do not have visible data on their graphs. The average silhouette width is 0.29, which indicates a weak structure that could be artificial. These results indicate that most variables in the dataset are independent of each other. However, relationships previously seen in the summary statistics were still present. For example, counties with lower populations tend to have lower cases of cancer and diagnosed diabetes cases compared to counties with higher populations because more people are present. The cases of cancer in each county had a greater correlation with population than cases of diagnosed diabetes. Although data showed a higher correlation between diagnosed cases of diabetes and the rate of new types of cancer compared to the cases of cancer in each county, there does not seem to be a big correlation between diabetes and cancer cases in Texas counties as the cluster solution is weak.</em></p>
+<hr />
+</div>
+
+              <hr>
+              <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div>
+            </div>
+          </div>
+          <hr>
+        <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+        </div>
+      </div>
+      
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="../js/docs.min.js"></script>
+<script src="../js/main.js"></script>
+
+<script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>

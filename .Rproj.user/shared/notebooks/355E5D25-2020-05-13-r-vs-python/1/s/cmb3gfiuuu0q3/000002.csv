@@ -1,0 +1,13 @@
+"0","
+#Here is a code written in Python:
+
+#print(r.data)
+
+for i in r.data:
+    print(i)
+"
+"2","Traceback (most recent call last):
+  File ""/tmp/RtmpgRwc2V/chunk-code-694b5e657f07.txt"", line 6, in <module>
+    for i in r.data:
+NameError: name 'r' is not defined
+"
