@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "587108081",
+    "hash" : "0",
     "id" : "1B972B63",
-    "lastKnownWriteTime" : 1589391255,
-    "last_content_update" : 1589391662848,
+    "lastKnownWriteTime" : 1589393865,
+    "last_content_update" : 1589393865361,
     "path" : "~/Website/content/blog/2020-05-13-r-vs-python.Rmd",
     "project_path" : "content/blog/2020-05-13-r-vs-python.Rmd",
     "properties" : {
-        "cursorPosition" : "19,3",
-        "scrollLine" : "14"
+        "cursorPosition" : "44,59",
+        "scrollLine" : "37"
     },
     "relative_order" : 6,
     "source_on_save" : false,

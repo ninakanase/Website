@@ -6,20 +6,20 @@
     <description>Recent content in Blogs on Portfolio</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate>
+    <lastBuildDate>Wed, 13 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/blog/2015-07-23-r-rmarkdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>R vs Python</title>
+      <link>/blog/try-again-2/</link>
+      <pubDate>Wed, 13 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>/blog/2015-07-23-r-rmarkdown/</guid>
-      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+      <guid>/blog/try-again-2/</guid>
+      <description>The code below shows how R and Python can work together!
+ #Here is a code written in R: library(reticulate) data &amp;lt;- c(1:5)  #Here is a code written in Python: print(r.data) ## [1, 2, 3, 4, 5] The code below shows the use of regular expressions in python to match all IP addresses in a real-world string!
+ import re string2=&amp;quot;Jan 13 00:48:59: DROP service 68-&amp;gt;67(udp) from 213.92.153.167 to 69.</description>
     </item>
     
   </channel>

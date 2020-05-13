@@ -1,10 +1,12 @@
-+++
-title = "R vs Python"
-description = ""
-tags = []
-categories = []
-+++
-
+---
+title: R vs Python
+author: ''
+date: '2020-05-13'
+slug: try-again-2
+categories: []
+tags: []
+description: ''
+---
 The code below shows how R and Python can work together!
 
 ![](/blog/2020-05-13-r-vs-python_files/blogimage.jpeg)
