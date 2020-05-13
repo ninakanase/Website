@@ -12,7 +12,6 @@ The code below shows how R and Python can work together!
 ![](/blog/2020-05-13-r-vs-python_files/blogimage.jpeg)
 
 ```{R}
-
 #Here is a code written in R:
 
 library(reticulate)
@@ -22,17 +21,16 @@ data <- c(1:5)
 ```
 
 ```{python}
-
 #Here is a code written in Python:
 
 print(r.data)
 
 ```
 
-The code below shows the use of regular expressions in python to match all IP addresses in a real-world string!
+
+The code below shows the use of regular expressions in Python to match all IP addresses in a real-world string!
 
 ```{python}
-
 import re
 
 string2="Jan 13 00:48:59: DROP service 68->67(udp) from 213.92.153.167 to 69.43.107.219, prefix: \"spoof iana-0/8\" \

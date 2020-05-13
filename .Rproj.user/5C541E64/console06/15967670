@@ -280,3 +280,40 @@ remote: Resolving deltas:   0% (0/40)[Kremote: Resolving deltas:   5% (2/40)[
 To https://github.com/ninakanase/Website.git
  * [new branch]      master -> master
 ]0;/stor/home/ndk347/Website]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ git add .
+]0;/stor/home/ndk347/Website]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ git commit "[K-m"[K "something"
+[master 841e053] something
+ Committer: Nina Kanase <ndk347@educcomp01.ccbb.utexas.edu>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 25 files changed, 568 insertions(+), 53 deletions(-)
+ rewrite .Rproj.user/shared/notebooks/355E5D25-2020-05-13-r-vs-python/1/s/chunks.json (70%)
+ delete mode 100644 .Rproj.user/shared/notebooks/355E5D25-2020-05-13-r-vs-python/1/s/cmb3gfiuuu0q3/000002.csv
+ create mode 100644 .gitignore
+ rename content/blog/{2020-05-13-r-vs-python.Rmd => 2020-05-13-try-again-2.Rmd} (92%)
+ rename content/blog/{2020-05-13-r-vs-python.html => 2020-05-13-try-again-2.html} (94%)
+ create mode 100644 public/blog/2020-05-13-try-again-2.Rmd
+ create mode 100644 public/blog/2020-05-13-try-again.Rmd
+ create mode 100644 public/blog/2020-05-13-try-again.html
+ create mode 100644 public/blog/try-again-2/index.html
+]0;/stor/home/ndk347/Website]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ git push origin master
+Username for 'https://github.com': ninakanase
+Password for 'https://ninakanase@github.com': 
+Counting objects: 41, done.
+Delta compression using up to 16 threads.
+Compressing objects:   2% (1/35)   Compressing objects:   5% (2/35)   Compressing objects:   8% (3/35)   Compressing objects:  11% (4/35)   Compressing objects:  14% (5/35)   Compressing objects:  17% (6/35)   Compressing objects:  20% (7/35)   Compressing objects:  22% (8/35)   Compressing objects:  25% (9/35)   Compressing objects:  28% (10/35)   Compressing objects:  31% (11/35)   Compressing objects:  34% (12/35)   Compressing objects:  37% (13/35)   Compressing objects:  40% (14/35)   Compressing objects:  42% (15/35)   Compressing objects:  45% (16/35)   Compressing objects:  48% (17/35)   Compressing objects:  51% (18/35)   Compressing objects:  54% (19/35)   Compressing objects:  57% (20/35)   Compressing objects:  60% (21/35)   Compressing objects:  62% (22/35)   Compressing objects:  65% (23/35)   Compressing objects:  68% (24/35)   Compressing objects:  71% (25/35)   Compressing objects:  74% (26/35)   Compressing objects:  77% (27/35)   Compressing objects:  80% (28/35)   Compressing objects:  82% (29/35)   Compressing objects:  85% (30/35)   Compressing objects:  88% (31/35)   Compressing objects:  91% (32/35)   Compressing objects:  94% (33/35)   Compressing objects:  97% (34/35)   Compressing objects: 100% (35/35)   Compressing objects: 100% (35/35), done.
+Writing objects:   2% (1/41)   Writing objects:   4% (2/41)   Writing objects:   7% (3/41)   Writing objects:   9% (4/41)   Writing objects:  12% (5/41)   Writing objects:  14% (6/41)   Writing objects:  17% (7/41)   Writing objects:  19% (8/41)   Writing objects:  21% (9/41)   Writing objects:  24% (10/41)   Writing objects:  26% (11/41)   Writing objects:  29% (12/41)   Writing objects:  31% (13/41)   Writing objects:  34% (14/41)   Writing objects:  36% (15/41)   Writing objects:  39% (16/41)   Writing objects:  41% (17/41)   Writing objects:  43% (18/41)   Writing objects:  46% (19/41)   Writing objects:  48% (20/41)   Writing objects:  51% (21/41)   Writing objects:  53% (22/41)   Writing objects:  56% (23/41)   Writing objects:  58% (24/41)   Writing objects:  60% (25/41)   Writing objects:  63% (26/41)   Writing objects:  65% (27/41)   Writing objects:  68% (28/41)   Writing objects:  70% (29/41)   Writing objects:  73% (30/41)   Writing objects:  80% (33/41)   Writing objects:  82% (34/41)   Writing objects:  85% (35/41)   Writing objects:  87% (36/41)   Writing objects:  90% (37/41)   Writing objects:  92% (38/41)   Writing objects:  95% (39/41)   Writing objects:  97% (40/41)   Writing objects: 100% (41/41)   Writing objects: 100% (41/41), 10.99 KiB | 1023.00 KiB/s, done.
+Total 41 (delta 21), reused 0 (delta 0)
+remote: Resolving deltas:   0% (0/21)[Kremote: Resolving deltas:   9% (2/21)[Kremote: Resolving deltas:  14% (3/21)[Kremote: Resolving deltas:  19% (4/21)[Kremote: Resolving deltas:  23% (5/21)[Kremote: Resolving deltas:  28% (6/21)[Kremote: Resolving deltas:  33% (7/21)[Kremote: Resolving deltas:  38% (8/21)[Kremote: Resolving deltas:  42% (9/21)[Kremote: Resolving deltas:  47% (10/21)[Kremote: Resolving deltas:  52% (11/21)[Kremote: Resolving deltas:  57% (12/21)[Kremote: Resolving deltas:  61% (13/21)[Kremote: Resolving deltas:  66% (14/21)[Kremote: Resolving deltas:  71% (15/21)[Kremote: Resolving deltas:  76% (16/21)[Kremote: Resolving deltas:  80% (17/21)[Kremote: Resolving deltas:  85% (18/21)[Kremote: Resolving deltas:  90% (19/21)[Kremote: Resolving deltas:  95% (20/21)[Kremote: Resolving deltas: 100% (21/21)[Kremote: Resolving deltas: 100% (21/21), completed with 19 local objects.[K
+To https://github.com/ninakanase/Website.git
+   7e72603..841e053  master -> master
+]0;/stor/home/ndk347/Website]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ [K]0;ndk347@educcomp01: ~/Website[01;32mndk347@educcomp01[00m:[01;34m~/Website[00m$ git add .

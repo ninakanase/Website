@@ -18,8 +18,8 @@
       
       <guid>/blog/try-again-2/</guid>
       <description>The code below shows how R and Python can work together!
- #Here is a code written in R: library(reticulate) data &amp;lt;- c(1:5)  #Here is a code written in Python: print(r.data) ## [1, 2, 3, 4, 5] The code below shows the use of regular expressions in python to match all IP addresses in a real-world string!
- import re string2=&amp;quot;Jan 13 00:48:59: DROP service 68-&amp;gt;67(udp) from 213.92.153.167 to 69.</description>
+ #Here is a code written in R: library(reticulate) data &amp;lt;- c(1:5) #Here is a code written in Python: print(r.data) ## [1, 2, 3, 4, 5] The code below shows the use of regular expressions in Python to match all IP addresses in a real-world string!
+import re string2=&amp;quot;Jan 13 00:48:59: DROP service 68-&amp;gt;67(udp) from 213.92.153.167 to 69.43.107.219, prefix: \&amp;quot;spoof iana-0/8\&amp;quot; \ (in: eth0 69.</description>
     </item>
     
   </channel>
